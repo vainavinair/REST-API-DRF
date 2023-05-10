@@ -24,6 +24,7 @@ def validate_decription(serializer):
 
 
 class ProductList(AuthenticationMixin, generics.ListAPIView):
+# class ProductList(generics.ListAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
 
