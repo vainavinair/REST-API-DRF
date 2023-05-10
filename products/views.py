@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import User
 
 from rest_framework import generics
 from rest_framework.response import Response
-# from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
 
 from .models import Products
 from .serializers import ProductSerializer
 from.permissions_authentications import AuthenticationMixin
+
+
 
 
 # @api_view(['GET'])
@@ -24,7 +27,6 @@ def validate_decription(serializer):
 
 
 class ProductList(AuthenticationMixin, generics.ListAPIView):
-# class ProductList(generics.ListAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
 
@@ -59,3 +61,8 @@ class ProductDelete(generics.DestroyAPIView):
         serializer = self.get_serializer(instance)
         self.perform_destroy(instance)
         return Response(serializer.data)
+
+from rest_framework.authtoken.models import Token
+
+
+
