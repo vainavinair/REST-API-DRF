@@ -1,9 +1,6 @@
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.models import User
-
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 
 from .models import Product
 from .serializers import ProductSerializer
@@ -19,19 +16,23 @@ def validate_description(validated_data):
     return description
 
 class ProductList(AuthenticationMixin, generics.ListAPIView):
-    # queryset = Product.objects.all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
+    filterset_fields = ('category', 'user__username',)
+    ordering_fields = ('price',)
+    search_fields = ('name', 'description','user__username','category')
 
-    def get_queryset(self):
-        queryset = Product.objects.all()
-        username = self.request.query_params.get('user')
-        category = self.request.query_params.get('category')
-        if username:
-            username = User.objects.filter(username__contains=username).first()    
-            queryset = queryset.filter(user=username)
-        if category: 
-            queryset = queryset.filter(category=category)
-        return queryset
+    # def get_queryset(self):
+    #     queryset = Product.objects.all()
+    #     username = self.request.query_params.get('user')
+    #     category = self.request.query_params.get('category')
+    #     if username:
+    #         username = User.objects.filter(username__contains=username).first()    
+    #         queryset = queryset.filter(user=username)
+    #     if category: 
+    #         queryset = queryset.filter(category=category)
+    #     return queryset
 
 class ProductCreate(AuthenticationMixin, generics.CreateAPIView):
     queryset = Product.objects.all()
