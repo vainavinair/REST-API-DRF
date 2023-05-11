@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
-from .models import Products
+from .models import Product
 from .serializers import ProductSerializer
 from.permissions_authentications import AuthenticationMixin
 
@@ -19,13 +19,22 @@ def validate_description(validated_data):
     return description
 
 class ProductList(AuthenticationMixin, generics.ListAPIView):
-    queryset = Products.objects.all()
+    # queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['user']
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        username = self.request.query_params.get('user')
+        category = self.request.query_params.get('category')
+        if username:
+            username = User.objects.filter(username__contains=username).first()    
+            queryset = queryset.filter(user=username)
+        if category: 
+            queryset = queryset.filter(category=category)
+        return queryset
 
 class ProductCreate(AuthenticationMixin, generics.CreateAPIView):
-    queryset = Products.objects.all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     def perform_create(self, serializer):
@@ -33,7 +42,7 @@ class ProductCreate(AuthenticationMixin, generics.CreateAPIView):
         serializer.save(description=description)
 
 class ProductCreateMany(AuthenticationMixin, generics.CreateAPIView):
-    queryset = Products.objects.all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     def create(self, request, *args, **kwargs):
@@ -52,7 +61,7 @@ class ProductCreateMany(AuthenticationMixin, generics.CreateAPIView):
 
 
 class ProductUpdate(AuthenticationMixin, generics.RetrieveUpdateAPIView):
-    queryset = Products.objects.all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
 
@@ -62,7 +71,7 @@ class ProductUpdate(AuthenticationMixin, generics.RetrieveUpdateAPIView):
 
 
 class ProductDelete(AuthenticationMixin, generics.RetrieveDestroyAPIView):
-    queryset = Products.objects.all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
 

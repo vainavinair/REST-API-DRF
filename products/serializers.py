@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Products
+from .models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
-        model = Products
-        fields = ('id', 'user', 'name', 'description', 'price', 'image')
+        model = Product
+        fields = ('id', 'user', 'name', 'description', 'category', 'price', 'date_added')
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
