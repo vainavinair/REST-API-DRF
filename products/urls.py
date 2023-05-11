@@ -9,5 +9,5 @@ urlpatterns = [
     path('create/', ProductCreate.as_view(), name='api-create'),
     path('<id>/update/', ProductUpdate.as_view(), name='api-update'),
     path('<id>/delete/', ProductDelete.as_view(), name='api-delete'),
-    path('auth/login/', obtain_auth_token, name='api-token'),
+    # path('auth/login/', obtain_auth_token, name='api-token'),
 ]

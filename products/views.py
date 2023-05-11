@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
@@ -10,48 +10,45 @@ from .serializers import ProductSerializer
 from.permissions_authentications import AuthenticationMixin
 
 
-
-
-# @api_view(['GET'])
-# def home(request):
-#     data = Products.objects.all()
-#     serializer = ProductSerializer(data, many=True)
-#     return Response(serializer.data)
-
-def validate_decription(serializer):
-    name = serializer.validated_data.get('name')
-    description = serializer.validated_data.get('description') or None
-    if description is None:
-        description = name
-    return description
+def validate_description(attrs):
+        name = attrs.get('name')
+        description = attrs.get('description') or None
+        if description is None:
+            description = name
+        return description
 
 
 class ProductList(AuthenticationMixin, generics.ListAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
 
-class ProductCreate(generics.CreateAPIView):
+class ProductCreate(AuthenticationMixin, generics.CreateAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
 
-    def perform_create(self, serializer):
-        name = serializer.validated_data.get('name')
-        description = serializer.validated_data.get('description') or None
-        if description is None:
-            description = name
-        serializer.save(description=description)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
 
-class ProductUpdate(generics.RetrieveUpdateAPIView):
+        for item in serializer.validated_data:
+            description = validate_description(item)
+            item['description'] = description
+
+        self.perform_create(serializer)
+        return Response(serializer.data)
+
+
+class ProductUpdate(AuthenticationMixin, generics.RetrieveUpdateAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
 
     def perform_update(self, serializer):
-        description = validate_decription(serializer)
+        description = validate_description(serializer.validated_data)
         serializer.save(description=description)
 
 
-class ProductDelete(generics.DestroyAPIView):
+class ProductDelete(AuthenticationMixin, generics.DestroyAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
