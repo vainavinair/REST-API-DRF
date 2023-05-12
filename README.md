@@ -71,8 +71,8 @@ The API uses token-based authentication to secure the endpoints. To access the p
 
 The API provides the following authentication endpoints using the `Simple JWT` library:
 
-`POST /token/`: Obtain an access token by providing your credentials. This endpoint validates the provided username and password, and if they are correct, it returns an access token and a refresh token in the response.
-`POST /token/refresh/`: Refresh an access token using a valid refresh token. This endpoint allows you to obtain a new access token without having to provide your credentials again. You need to include a valid refresh token in the request, and if it is valid, a new access token is returned.
+`POST user/token/`: Obtain an access token by providing your credentials. This endpoint validates the provided username and password, and if they are correct, it returns an access token and a refresh token in the response.
+`POST user/token/refresh/`: Refresh an access token using a valid refresh token. This endpoint allows you to obtain a new access token without having to provide your credentials again. You need to include a valid refresh token in the request, and if it is valid, a new access token is returned.
 
 The API also includes the following permissions:
 - `IsAuthenticated`: Only authenticated users can access the endpoints.
@@ -93,4 +93,25 @@ Example usage:
 - `GET api/home/?user=johndoe`: Get all products owned by the user with the username "johndoe".
 - `GET api/home/?ordering=price`: Order products by price in ascending order.
 - `GET api/home/?search=phone`: Search for products with the keyword "phone" in their name, description, category, or owner's username.
+
+## Screenshots
+### List View/Read
+![List View](media\home_endpoint.png)
+### Detail View
+![Detail View](media\detail_endpoint.png)
+### Sorted View
+![Sorting](media\sort.png)
+### Filter,Search
+![Filter,Search](media\filter.png)
+### Create 
+![Create](media\create_endpoint.png)
+### Permission Check
+![Permission](media\permission.png)
+### Update 
+![Update](media\update_endpoint.png)
+### Delete 
+![Delete](media\delete_endpoint.png)
+### Token 
+![Token](media\token_endpoint.png)
+
 
