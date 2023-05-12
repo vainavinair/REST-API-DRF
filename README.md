@@ -96,22 +96,22 @@ Example usage:
 
 ## Screenshots
 ### List View/Read
-![List View](media\home_endpoint.png)
+![List View](screenshots\home_endpoint.png)
 ### Detail View
-![Detail View](media\detail_endpoint.png)
+![Detail View](screenshots\detail_endpoint.png)
 ### Sorted View
-![Sorting](media\sort.png)
+![Sorting](screenshots\sort.png)
 ### Filter,Search
-![Filter,Search](media\filter.png)
+![Filter,Search](screenshots\filter.png)
 ### Create 
-![Create](media\create_endpoint.png)
+![Create](screenshots\create_endpoint.png)
 ### Permission Check
-![Permission](media\permission.png)
+![Permission](screenshots\permission.png)
 ### Update 
-![Update](media\update_endpoint.png)
+![Update](screenshots\update_endpoint.png)
 ### Delete 
-![Delete](media\delete_endpoint.png)
+![Delete](screenshots\delete_endpoint.png)
 ### Token 
-![Token](media\token_endpoint.png)
+![Token](screenshots\token_endpoint.png)
 
 
