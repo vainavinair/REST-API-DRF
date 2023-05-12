@@ -9,9 +9,9 @@ from rest_framework.exceptions import PermissionDenied
 #             return request.user.id == obj.id
 #         return False
     
-class AuthenticationMixin:
-    authentication_classes = [TokenAuthentication,SessionAuthentication ]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+# class AuthenticationMixin:
+#     # authentication_classes = [TokenAuthentication,SessionAuthentication ]
+#     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class IsOwner(BasePermission):
     def __init__(self, request, obj):
