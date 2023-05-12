@@ -1,12 +1,15 @@
+from django.contrib.auth.models import User
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 
 from .models import Product
 from .serializers import ProductSerializer
-from.permissions_authentications import AuthenticationMixin
+from.permissions_authentications import AuthenticationMixin,IsOwner
 
-from django_filters.rest_framework import DjangoFilterBackend
 
 def validate_description(validated_data):
     name = validated_data.get('name')
@@ -19,10 +22,12 @@ class ProductList(AuthenticationMixin, generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
-    filterset_fields = ('category', 'user__username',)
+    filterset_fields = ('category', 'user__username','user')
     ordering_fields = ('price',)
     search_fields = ('name', 'description','user__username','category')
 
+
+    
     # def get_queryset(self):
     #     queryset = Product.objects.all()
     #     username = self.request.query_params.get('user')
@@ -67,6 +72,7 @@ class ProductUpdate(AuthenticationMixin, generics.RetrieveUpdateAPIView):
     lookup_field = 'id'
 
     def perform_update(self, serializer):
+        IsOwner(request=self.request,obj=self.get_object())
         description = validate_description(serializer.validated_data)
         serializer.save(description=description)
 
@@ -78,6 +84,7 @@ class ProductDelete(AuthenticationMixin, generics.RetrieveDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
+        IsOwner(request=self.request,obj=instance)
         serializer = self.get_serializer(instance)
         self.perform_destroy(instance)
         return Response(serializer.data)
